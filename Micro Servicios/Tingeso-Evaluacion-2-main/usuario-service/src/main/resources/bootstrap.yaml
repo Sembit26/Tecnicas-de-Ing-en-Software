@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: usuario-service
+
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8081
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/usuario_service
+    username: postgres
+    password: holamundo
+
+  jpa:
+    hibernate:
+      ddl-auto: update

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: descuento-por-personas-service
+
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8081
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/descuento_persona
+    username: postgres
+    password: holamundo
+
+  jpa:
+    hibernate:
+      ddl-auto: update

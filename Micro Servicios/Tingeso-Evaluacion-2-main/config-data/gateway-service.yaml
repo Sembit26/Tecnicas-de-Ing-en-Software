@@ -1,0 +1,71 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      default-zone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: descuento-por-cliente-frecuente
+          uri: lb://descuento-por-cliente-frecuente
+          predicates:
+            - Path=/api/descuentoPorClienteFrecuente/**
+        - id: descuento-por-personas-service
+          uri: lb://descuento-por-personas-service
+          predicates:
+            - Path=/api/descuentoPorNumPersonas/**
+        - id: tarifa-duracion-reserva-service
+          uri: lb://tarifa-duracion-reserva-service
+          predicates:
+            - Path=/api/tarifasDuracion/**
+        - id: tarifa-dias-especiales
+          uri: lb://tarifa-dias-especiales
+          predicates:
+            - Path=/api/tarifasDiasEspeciales/**
+        - id: reserva-service
+          uri: lb://reserva-service
+          predicates:
+            - Path=/api/reservas/**
+        - id: reserva-service-comprobante
+          uri: lb://reserva-service
+          predicates:
+            - Path=/api/comprobante/**
+        - id: usuario-service
+          uri: lb://usuario-service
+          predicates:
+            - Path=/api/usuarios/**
+        - id: rack-semanal-service
+          uri: lb://rack-semanal-service
+          predicates:
+            - Path=/api/rackSemanal/**
+        - id: reportes-service
+          uri: lb://reportes-service
+          predicates:
+            - Path=/api/reportes/**
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+            maxAge: 3600

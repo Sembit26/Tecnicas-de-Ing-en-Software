@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+
+# Servicio de PostgreSQL (nuevo)
+  postgres:
+    image: postgres
+    container_name: tingeso-postgres
+    environment:
+      - POSTGRES_DB=dbappweb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=holamundo
+    volumes:
+      - tingeso_evaluacion1_postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+  # Frontend services
+  frontend1:
+    image: sembit26/appwebkarting-frontend
+    networks:
+      - frontend-network
+
+  frontend2:
+    image: sembit26/appwebkarting-frontend
+    networks:
+      - frontend-network
+
+  # Backend services
+  backend1:
+    image: sembit26/appwebkarting-backend
+    environment:
+      - DB_HOST=tingeso-postgres
+    networks:
+      - backend-network
+
+  backend2:
+    image: sembit26/appwebkarting-backend
+    environment:
+      - DB_HOST=tingeso-postgres
+    networks:
+      - backend-network
+
+  # Nginx for frontend load balancing
+  nginx-frontend:
+    image: nginx:latest
+    ports:
+      - "8070:80"
+    volumes:
+      - ./nginx-frontend.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend1
+      - frontend2
+    networks:
+      - frontend-network
+
+  # Nginx for backend load balancing
+  nginx-backend:
+    image: nginx:latest
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./nginx-backend.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend1
+      - backend2
+    networks:
+      - backend-network
+
+networks:
+  frontend-network:
+  backend-network:
+
+volumes:
+  tingeso_evaluacion1_postgres_data:
